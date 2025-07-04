@@ -14,8 +14,13 @@
             background-color: #1a202c; /* Fondo oscuro */
             color: #e2e8f0; /* Texto claro */
             display: flex;
+            flex-direction: column; /* Cambiado para responsividad */
             min-height: 100vh;
             margin: 0;
+        }
+        .content-wrapper {
+            display: flex;
+            flex-grow: 1;
         }
         .sidebar {
             width: 80px;
@@ -29,6 +34,7 @@
             position: fixed;
             height: 100vh;
             z-index: 10;
+            transition: width 0.3s ease;
         }
         .sidebar-icon {
             padding: 0.75rem;
@@ -50,6 +56,7 @@
             padding: 1.5rem;
             margin-left: 80px;
             background-color: #1a202c; /* Fondo principal oscuro */
+            transition: margin-left 0.3s ease;
         }
         .top-bar {
             background-color: #2d3748; /* Barra superior más oscura */
@@ -122,18 +129,6 @@
             height: 8px;
             border-radius: 9999px;
         }
-        .chart-bar-small {
-            width: 8px;
-            height: 30px; /* Example height */
-            background-color: #4299e1;
-            border-radius: 2px;
-        }
-        .chart-segment {
-            height: 10px;
-            border-radius: 2px;
-            display: inline-block;
-            margin-right: 2px;
-        }
         .section-toggle-container {
             background-color: #2d3748;
             border-radius: 1.5rem;
@@ -160,12 +155,12 @@
         .section-content-toggle {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease-out;
+            transition: max-height 0.5s ease-out, padding-top 0.5s ease-out;
             padding-top: 0;
         }
         .section-content-toggle.active {
             max-height: 1000px; /* Ajustar según el contenido */
-            transition: max-height 0.7s ease-in;
+            transition: max-height 0.7s ease-in, padding-top 0.7s ease-in;
             padding-top: 1rem;
         }
         .video-container {
@@ -188,12 +183,12 @@
         .card-detailed-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease-out;
+            transition: max-height 0.5s ease-out, padding-top 0.5s ease-out;
             padding-top: 0;
         }
         .card-detailed-content.active {
             max-height: 500px; /* Ajustar según el contenido */
-            transition: max-height 0.7s ease-in;
+            transition: max-height 0.7s ease-in, padding-top 0.7s ease-in;
             padding-top: 1rem;
         }
         .arrow-icon {
@@ -208,7 +203,7 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: conic-gradient(#68d391 0% 70%, #4299e1 70% 100%); /* Example: 70% green, 30% blue */
+            background: conic-gradient(#68d391 0% 70%, #4299e1 70% 100%);
             margin: 0 auto;
             margin-bottom: 1rem;
         }
@@ -228,15 +223,22 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .content-wrapper {
+                flex-direction: column;
+            }
             .sidebar {
                 width: 100%;
                 height: auto;
-                position: relative;
+                position: static; /* Cambiado de fixed a static */
                 flex-direction: row;
                 justify-content: space-around;
                 padding: 0.5rem 0;
                 border-right: none;
                 border-bottom: 1px solid #4a5568;
+                z-index: 20; /* Asegurar que esté por encima del contenido */
             }
             .main-content-area {
                 margin-left: 0;
@@ -249,10 +251,12 @@
                 flex-direction: column;
                 align-items: flex-start;
                 padding: 1rem;
+                text-align: center;
             }
-            .top-bar h1 {
-                font-size: 1.5rem;
-                margin-bottom: 0.5rem;
+             .top-bar h1 {
+                font-size: 1.25rem; /* Ajuste de fuente para móviles */
+                margin-bottom: 1rem;
+                width: 100%;
             }
             .top-bar .flex {
                 width: 100%;
@@ -265,410 +269,393 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="mb-8 p-2">
-            <!-- UCEM Logo -->
-            <img src="https://content.googleapis.com/v1/files/uploaded:image.png-c0770c53-bef8-41db-8f3b-74eec1c02458" alt="UCEM Logo" class="w-12 h-12 rounded-full object-contain">
-        </div>
-        <div class="sidebar-icon active">
-            <!-- Home Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 00-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-            </svg>
-        </div>
-        <div class="sidebar-icon">
-            <!-- User Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-        </div>
-        <div class="sidebar-icon">
-            <!-- Settings Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-        </div>
-        <!-- Más iconos pueden ser añadidos aquí -->
-    </aside>
-
-    <!-- Área de Contenido Principal -->
-    <div class="main-content-area">
-        <!-- Barra Superior -->
-        <header class="top-bar">
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-100">El Mejor Ingeniero en IA para la Mejor Institución UCEM</h1>
-            <div class="flex items-center space-x-4">
-                <input type="text" placeholder="Buscar..." class="px-4 py-2 rounded-full border border-gray-600 bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <span class="text-gray-300 hidden md:block">Christian Ordoñez</span>
-                <img src="https://content.googleapis.com/v1/files/uploaded:image.png-c8167f88-adfe-466a-b513-09b628d68880" alt="Christian Ordoñez" class="profile-img w-10 h-10">
+    <div class="content-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="p-2 md:mb-8">
+                <!-- UCEM Logo -->
+                <img src="https://storage.googleapis.com/gemini-prod-us-central1-cbf2/images/5d3c631c-3238-42f3-936a-f0559e272990.png" alt="UCEM Logo" class="w-12 h-12 rounded-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/48x48/1a202c/ffffff?text=UCEM';">
             </div>
-        </header>
+            <div class="sidebar-icon active">
+                <!-- Home Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 00-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+            </div>
+            <div class="sidebar-icon">
+                <!-- User Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+            </div>
+            <div class="sidebar-icon">
+                <!-- Settings Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </div>
+        </aside>
 
-        <!-- Grid del Dashboard -->
-        <div class="dashboard-grid">
-            <!-- Tarjeta 1: Bienvenida / Acerca de Mí -->
-            <div class="card" onclick="toggleCard('card1')">
-                <div class="card-header">
-                    <div class="flex items-center">
-                        <img src="https://content.googleapis.com/v1/files/uploaded:image.png-c8167f88-adfe-466a-b513-09c8167f88-adfe-466a-b513-09b628d68880" alt="Christian Ordoñez" class="profile-img mr-3">
-                        <div>
-                            <h3 class="text-xl font-bold text-gray-100">Hola Christian, ¡Bienvenido! 👋</h3>
-                            <p class="text-sm text-gray-400">Especialista en IA y Optimización</p>
+        <!-- Área de Contenido Principal -->
+        <div class="main-content-area">
+            <!-- Barra Superior -->
+            <header class="top-bar">
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-100">El Mejor Ingeniero en IA para la Mejor Institución UCEM</h1>
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <input type="text" placeholder="Buscar..." class="hidden md:block px-4 py-2 rounded-full border border-gray-600 bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <span class="text-gray-300 hidden md:block">Christian Ordoñez</span>
+                    <img src="https://storage.googleapis.com/gemini-prod-us-central1-cbf2/images/2202a014-998f-4607-b328-912f2759146f.png" alt="Christian Ordoñez" class="profile-img w-10 h-10" onerror="this.onerror=null; this.src='https://placehold.co/40x40/68d391/ffffff?text=CO';">
+                </div>
+            </header>
+
+            <!-- Grid del Dashboard -->
+            <div class="dashboard-grid">
+                <!-- Tarjeta 1: Bienvenida / Acerca de Mí -->
+                <div class="card" onclick="toggleCard('card1')">
+                    <div class="card-header">
+                        <div class="flex items-center">
+                            <img src="https://storage.googleapis.com/gemini-prod-us-central1-cbf2/images/2202a014-998f-4607-b328-912f2759146f.png" alt="Christian Ordoñez" class="profile-img mr-3" onerror="this.onerror=null; this.src='https://placehold.co/48x48/68d391/ffffff?text=CO';">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-100">Hola Christian, ¡Bienvenido! 👋</h3>
+                                <p class="text-sm text-gray-400">Especialista en IA y Optimización</p>
+                            </div>
+                        </div>
+                        <span class="text-2xl text-gray-400 arrow-icon" id="arrow-card1">▼</span>
+                    </div>
+                    <p class="text-sm text-gray-300">
+                        "Mi visión: IA para transformar vidas y procesos. ✨"
+                    </p>
+                    <div id="card1-content" class="card-detailed-content">
+                        <p class="text-sm text-gray-300 mt-4">
+                            Soy un especialista en Inteligencia Artificial con experiencia en optimización de procesos digitales y escritos. He liderado equipos, incrementado ventas mediante estrategias de marketing y gestionado activos digitales. Mi enfoque es la aplicación estratégica de la IA para generar valor tangible. 🚀
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2: Experiencia Clave -->
+                <div class="card" onclick="toggleCard('card2')">
+                    <div class="card-header">
+                        <div class="flex items-center">
+                            <div class="card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-100">Experiencia Clave 🔑</h3>
+                        </div>
+                        <span class="text-2xl text-gray-400 arrow-icon" id="arrow-card2">▼</span>
+                    </div>
+                    <p class="text-sm text-gray-300">
+                        "Años liderando innovación y crecimiento. 📈"
+                    </p>
+                    <div id="card2-content" class="card-detailed-content">
+                        <div class="flex flex-col space-y-2 mt-4">
+                            <p class="text-sm text-gray-300">*IA/Machine Learning:* +4 años en diseño e implementación de soluciones avanzadas. 🤖</p>
+                            <p class="text-sm text-gray-300">*Liderazgo de Proyectos:* +3 años liderando proyectos complejos de transformación digital e innovación tecnológica. 📊</p>
+                            <p class="text-sm text-gray-300">*Gestión Empresarial:* Ingeniero en Gestión Empresarial (2015-2019), con enfoque en optimización de procesos. 💼</p>
+                            <p class="text-sm text-gray-300">*Marketing Estratégico:* Experiencia probada en incremento de ventas mediante estrategias de marketing digital y fidelización de clientes. 🎯</p>
                         </div>
                     </div>
-                    <span class="text-2xl text-gray-400 arrow-icon" id="arrow-card1">▼</span>
                 </div>
-                <p class="text-sm text-gray-300">
-                    "Mi visión: IA para transformar vidas y procesos. ✨"
-                </p>
-                <div id="card1-content" class="card-detailed-content">
-                    <p class="text-sm text-gray-300 mt-4">
-                        Soy un especialista en Inteligencia Artificial con experiencia en optimización de procesos digitales y escritos. He liderado equipos, incrementado ventas mediante estrategias de marketing y gestionado activos digitales. Mi enfoque es la aplicación estratégica de la IA para generar valor tangible. 🚀
-                    </p>
-                </div>
-            </div>
 
-            <!-- Tarjeta 2: Experiencia Clave -->
-            <div class="card" onclick="toggleCard('card2')">
-                <div class="card-header">
-                    <div class="flex items-center">
-                        <div class="card-icon">
+                <!-- Tarjeta 3: Liderazgo y Equipos -->
+                <div class="card" onclick="toggleCard('card3')">
+                    <div class="card-header">
+                        <div class="flex items-center">
+                            <div class="card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H2v-2a3 3 0 015.356-1.857M17 20v-2c0-.653-.146-1.282-.42-1.857m0 0a5.972 5.972 0 00-2.802-2.802M10 10a2 2 0 100-4 2 2 0 000 4zm-2 7a2 2 0 100-4 2 2 0 000 4zm8 0a2 2 0 100-4 2 2 0 000 4zm-2-7a2 2 0 100-4 2 2 0 000 4z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-100">Liderazgo y Equipos 🤝</h3>
+                        </div>
+                        <span class="text-2xl text-gray-400 arrow-icon" id="arrow-card3">▼</span>
+                    </div>
+                    <p class="text-sm text-gray-300">
+                        "Potenciando el talento humano con visión estratégica. 🌟"
+                    </p>
+                    <div id="card3-content" class="card-detailed-content">
+                        <p class="text-sm text-gray-300 mt-4 mb-2">
+                            He liderado equipos multidisciplinarios, fortaleciendo la dinámica de trabajo mediante programas de capacitación y desarrollo humano. Mi enfoque es generar un ambiente laboral productivo y enfocado en el servicio y los resultados. 🚀
+                        </p>
+                        <div class="flex -space-x-2 overflow-hidden mb-4">
+                            <img class="team-avatar inline-block ring-2 ring-gray-700" src="https://placehold.co/32x32/ff6347/ffffff?text=A1" alt="Avatar 1">
+                            <img class="team-avatar inline-block ring-2 ring-gray-700" src="https://placehold.co/32x32/4682b4/ffffff?text=A2" alt="Avatar 2">
+                            <img class="team-avatar inline-block ring-2 ring-gray-700" src="https://placehold.co/32x32/ffa500/ffffff?text=A3" alt="Avatar 3">
+                            <img class="team-avatar inline-block ring-2 ring-gray-700" src="https://placehold.co/32x32/8a2be2/ffffff?text=A4" alt="Avatar 4">
+                            <span class="team-avatar inline-flex items-center justify-center bg-gray-600 text-gray-200 text-xs font-medium ring-2 ring-gray-700">+5</span>
+                        </div>
+                        <p class="text-xs text-gray-500">Área: Marketing y Desarrollo de Equipos 🧑‍💻</p>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 4: Frase de Sam Altman -->
+                <div class="card bg-gradient-to-br from-purple-700 to-blue-600 text-white">
+                    <div class="card-header">
+                        <div class="card-icon bg-white text-purple-700">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-100">Experiencia Clave 🔑</h3>
+                        <h3 class="text-xl font-bold">Visión IA 🧠</h3>
                     </div>
-                    <span class="text-2xl text-gray-400 arrow-icon" id="arrow-card2">▼</span>
+                    <p class="text-base italic">
+                        "La tecnología más profunda es aquella que desaparece en el tejido de la vida cotidiana. 💡"
+                    </p>
+                    <p class="text-xs text-right font-light">- Sam Altman (OpenAI)</p>
                 </div>
-                <p class="text-sm text-gray-300">
-                    "Años liderando innovación y crecimiento. 📈"
-                </p>
-                <div id="card2-content" class="card-detailed-content">
-                    <div class="flex flex-col space-y-2 mt-4">
-                        <p class="text-sm text-gray-300">*IA/Machine Learning:* +4 años en diseño e implementación de soluciones avanzadas. 🤖</p>
-                        <p class="text-sm text-gray-300">*Liderazgo de Proyectos:* +3 años liderando proyectos complejos de transformación digital e innovación tecnológica. 📊</p>
-                        <p class="text-sm text-gray-300">*Gestión Empresarial:* Ingeniero en Gestión Empresarial (2015-2019), con enfoque en optimización de procesos. 💼</p>
-                        <p class="text-sm text-gray-300">*Marketing Estratégico:* Experiencia probada en incremento de ventas mediante estrategias de marketing digital y fidelización de clientes. 🎯</p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Tarjeta 3: Liderazgo y Equipos -->
-            <div class="card" onclick="toggleCard('card3')">
-                <div class="card-header">
-                    <div class="flex items-center">
-                        <div class="card-icon">
+                <!-- Tarjeta 5: Gestión de Proyectos con IA para UCEM -->
+                <div class="card" onclick="toggleCard('card5')">
+                    <div class="card-header">
+                        <div class="flex items-center">
+                            <div class="card-icon bg-purple-600 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-100">Proyectos IA en UCEM 🚀</h3>
+                        </div>
+                        <span class="text-2xl text-gray-400 arrow-icon" id="arrow-card5">▼</span>
+                    </div>
+                    <p class="text-sm text-gray-300">
+                        "Gestión eficiente con agentes autónomos. ⚙️"
+                    </p>
+                    <div id="card5-content" class="card-detailed-content">
+                        <p class="text-sm text-gray-300 mt-4 mb-2">
+                            Diseñaré herramientas con *motores de IA* y *dashboards amigables* para la gestión de proyectos en UCEM. Esto incluirá la implementación de *agentes autónomos (MCPs)* para:
+                        </p>
+                        <ul class="list-disc list-inside text-xs space-y-1 mb-3 text-gray-300">
+                            <li>Organización inteligente de agendas y reuniones. 🗓️</li>
+                            <li>Generación automática de minutas de juntas. 📝</li>
+                            <li>Control y seguimiento proactivo de proyectos y tareas. ✅</li>
+                            <li>Liberar al equipo de cargas administrativas repetitivas. ⏳</li>
+                        </ul>
+                        <div class="bar-chart-container">
+                            <div class="bar-chart-bar" style="height: 50px; background-color: #68d391;"></div>
+                            <div class="bar-chart-bar" style="height: 30px; background-color: #4299e1;"></div>
+                            <div class="bar-chart-bar" style="height: 20px; background-color: #fc8181;"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-400 mt-2">
+                            <span>Tasa de Éxito de Proyectos IA:</span>
+                            <span class="font-bold text-green-500">90% 🏆</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 6: Optimización Operativa para UCEM (Finanzas) -->
+                <div class="card" onclick="toggleCard('card6')">
+                    <div class="card-header">
+                        <div class="flex items-center">
+                            <div class="card-icon bg-blue-600 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4.93 19.07l-.707.707M2.93 12H3m15.07 7.07l-.707-.707M3.75 4.5V19.5M19.25 4.5V19.5M4.5 19.25H19.5M4.5 4.75H19.5" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-100">Eficiencia Operativa IA (Finanzas) 💰</h3>
+                        </div>
+                        <span class="text-2xl text-gray-400 arrow-icon" id="arrow-card6">▼</span>
+                    </div>
+                    <p class="text-sm text-gray-300">
+                        "IA para liberar el potencial humano. 💡"
+                    </p>
+                    <div id="card6-content" class="card-detailed-content">
+                        <p class="text-sm text-gray-300 mt-4 mb-2">
+                            Aplicaré la IA para automatizar y optimizar procesos en áreas críticas de UCEM como Recursos Humanos, Finanzas e Infraestructura. Esto permitirá:
+                        </p>
+                        <ul class="list-disc list-inside text-xs space-y-1 mb-3 text-gray-300">
+                            <li>Análisis predictivo de necesidades de personal y recursos. 📈</li>
+                            <li>Automatización de flujos de trabajo repetitivos. ⚙️</li>
+                            <li>Detección temprana de anomalías y optimización de presupuestos. 🛡️</li>
+                        </ul>
+                        <div class="pie-chart"></div>
+                        <div class="flex justify-between text-xs text-gray-400 mt-2">
+                            <span>Reducción de Costos Operativos:</span>
+                            <span class="font-bold text-green-500">30% 📉</span>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>Agilización de Procesos:</span>
+                            <span class="font-bold text-blue-400">40% ⚡</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">
+                            Basado en reportes de empresas que implementan IA en finanzas y operaciones. 📊
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 7: Marketing Potenciado por IA para UCEM -->
+                <div class="card" onclick="toggleCard('card7')">
+                    <div class="card-header">
+                        <div class="flex items-center">
+                            <div class="card-icon bg-green-600 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-100">Marketing IA en UCEM 📈</h3>
+                        </div>
+                        <span class="text-2xl text-gray-400 arrow-icon" id="arrow-card7">▼</span>
+                    </div>
+                    <p class="text-sm text-gray-300">
+                        "Campañas inteligentes, resultados superiores. 🎯"
+                    </p>
+                    <div id="card7-content" class="card-detailed-content">
+                        <p class="text-sm text-gray-300 mt-4 mb-2">
+                            Mi experiencia en marketing, combinada con IA, transformará la captación y retención de estudiantes en UCEM mediante:
+                        </p>
+                        <ul class="list-disc list-inside text-xs space-y-1 mb-3 text-gray-300">
+                            <li>*Personalización:* Experiencia educativa adaptada a cada estudiante. 🧑‍🎓</li>
+                            <li>*Optimización de Campañas:* Análisis predictivo para máxima efectividad en publicidad digital. 📊</li>
+                            <li>*Análisis de Tendencias:* Identificación de oportunidades de mercado y comportamiento del consumidor. 🔍</li>
+                        </ul>
+                        <div class="bar-chart-container">
+                            <div class="bar-chart-bar" style="height: 40px; background-color: #68d391;"></div>
+                            <div class="bar-chart-bar" style="height: 55px; background-color: #4299e1;"></div>
+                            <div class="bar-chart-bar" style="height: 30px; background-color: #fc8181;"></div>
+                            <div class="bar-chart-bar" style="height: 45px; background-color: #ecc94b;"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-400 mt-2">
+                            <span>Crecimiento de Leads IA:</span>
+                            <span class="font-bold text-green-500">+35% 🚀</span>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>ROI de Campañas:</span>
+                            <span class="font-bold text-blue-400">+25% 💰</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 8: Frase de Google I/O -->
+                <div class="card bg-gradient-to-br from-red-700 to-orange-600 text-white">
+                    <div class="card-header">
+                        <div class="card-icon bg-white text-red-700">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H2v-2a3 3 0 015.356-1.857M17 20v-2c0-.653-.146-1.282-.42-1.857m0 0a5.972 5.972 0 00-2.802-2.802M10 10a2 2 0 100-4 2 2 0 000 4zm-2 7a2 2 0 100-4 2 2 0 000 4zm8 0a2 2 0 100-4 2 2 0 000 4zm-2-7a2 2 0 100-4 2 2 0 000 4z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-100">Liderazgo y Equipos 🤝</h3>
+                        <h3 class="text-xl font-bold">Innovación IA 💡</h3>
                     </div>
-                    <span class="text-2xl text-gray-400 arrow-icon" id="arrow-card3">▼</span>
-                </div>
-                <p class="text-sm text-gray-300">
-                    "Potenciando el talento humano con visión estratégica. 🌟"
-                </p>
-                <div id="card3-content" class="card-detailed-content">
-                    <p class="text-sm text-gray-300 mt-4 mb-2">
-                        He liderado equipos multidisciplinarios, fortaleciendo la dinámica de trabajo mediante programas de capacitación y desarrollo humano. Mi enfoque es generar un ambiente laboral productivo y enfocado en el servicio y los resultados. 🚀
+                    <p class="text-base italic">
+                        "La IA es para todos. Es una herramienta poderosa para hacer la vida más útil y accesible. 🌐"
                     </p>
-                    <div class="flex -space-x-2 overflow-hidden mb-4">
-                        <img class="team-avatar inline-block ring-2 ring-gray-700" src="https://placehold.co/32x32/ff6347/ffffff?text=A1" alt="Avatar 1">
-                        <img class="team-avatar inline-block ring-2 ring-gray-700" src="https://placehold.co/32x32/4682b4/ffffff?text=A2" alt="Avatar 2">
-                        <img class="team-avatar inline-block ring-2 ring-gray-700" src="https://placehold.co/32x32/ffa500/ffffff?text=A3" alt="Avatar 3">
-                        <img class="team-avatar inline-block ring-2 ring-gray-700" src="https://placehold.co/32x32/8a2be2/ffffff?text=A4" alt="Avatar 4">
-                        <span class="team-avatar inline-flex items-center justify-center bg-gray-600 text-gray-200 text-xs font-medium ring-2 ring-gray-700">+5</span>
-                    </div>
-                    <p class="text-xs text-gray-500">Área: Marketing y Desarrollo de Equipos 🧑‍💻</p>
+                    <p class="text-xs text-right font-light">- Google I/O (Adaptado)</p>
                 </div>
-            </div>
 
-            <!-- Tarjeta 4: Frase de Sam Altman -->
-            <div class="card bg-gradient-to-br from-purple-700 to-blue-600 text-white">
-                <div class="card-header">
-                    <div class="card-icon bg-white text-purple-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold">Visión IA 🧠</h3>
-                </div>
-                <p class="text-base italic">
-                    "La tecnología más profunda es aquella que desaparece en el tejido de la vida cotidiana. 💡"
-                </p>
-                <p class="text-xs text-right font-light">- Sam Altman (OpenAI)</p>
-            </div>
-
-            <!-- Tarjeta 5: Gestión de Proyectos con IA para UCEM -->
-            <div class="card" onclick="toggleCard('card5')">
-                <div class="card-header">
-                    <div class="flex items-center">
-                        <div class="card-icon bg-purple-600 text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                            </svg>
+                <!-- Tarjeta 9: Adopción de IA y Experiencia de Usuario para UCEM -->
+                <div class="card" onclick="toggleCard('card9')">
+                    <div class="card-header">
+                        <div class="flex items-center">
+                            <div class="card-icon bg-yellow-600 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-100">Adopción IA y UX ✨</h3>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-100">Proyectos IA en UCEM 🚀</h3>
+                        <span class="text-2xl text-gray-400 arrow-icon" id="arrow-card9">▼</span>
                     </div>
-                    <span class="text-2xl text-gray-400 arrow-icon" id="arrow-card5">▼</span>
-                </div>
-                <p class="text-sm text-gray-300">
-                    "Gestión eficiente con agentes autónomos. ⚙️"
-                </p>
-                <div id="card5-content" class="card-detailed-content">
-                    <p class="text-sm text-gray-300 mt-4 mb-2">
-                        Diseñaré herramientas con *motores de IA* y *dashboards amigables* para la gestión de proyectos en UCEM. Esto incluirá la implementación de *agentes autónomos (MCPs)* para:
+                    <p class="text-sm text-gray-300">
+                        "Facilitando la transición a un futuro inteligente. 🚀"
                     </p>
-                    <ul class="list-disc list-inside text-xs space-y-1 mb-3 text-gray-300">
-                        <li>Organización inteligente de agendas y reuniones. 🗓️</li>
-                        <li>Generación automática de minutas de juntas. 📝</li>
-                        <li>Control y seguimiento proactivo de proyectos y tareas. ✅</li>
-                        <li>Liberar al equipo de cargas administrativas repetitivas. ⏳</li>
-                    </ul>
-                    <div class="bar-chart-container">
-                        <div class="bar-chart-bar" style="height: 50px; background-color: #68d391;"></div> <!-- Completados -->
-                        <div class="bar-chart-bar" style="height: 30px; background-color: #4299e1;"></div> <!-- En Curso -->
-                        <div class="bar-chart-bar" style="height: 20px; background-color: #fc8181;"></div> <!-- Pendientes -->
-                    </div>
-                    <div class="flex justify-between text-xs text-gray-400 mt-2">
-                        <span>Tasa de Éxito de Proyectos IA:</span>
-                        <span class="font-bold text-green-500">90% 🏆</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tarjeta 6: Optimización Operativa para UCEM (Finanzas) -->
-            <div class="card" onclick="toggleCard('card6')">
-                <div class="card-header">
-                    <div class="flex items-center">
-                        <div class="card-icon bg-blue-600 text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4.93 19.07l-.707.707M2.93 12H3m15.07 7.07l-.707-.707M3.75 4.5V19.5M19.25 4.5V19.5M4.5 19.25H19.5M4.5 4.75H19.5" />
-                            </svg>
+                    <div id="card9-content" class="card-detailed-content">
+                        <p class="text-sm text-gray-300 mt-4 mb-2">
+                            Superaremos las barreras de adopción de nuevas tecnologías en UCEM mediante:
+                        </p>
+                        <ul class="list-disc list-inside text-xs space-y-1 mb-3 text-gray-300">
+                            <li>*Interfaces Intuitivas:* Diseño centrado en el usuario para una fácil interacción. 🖥️</li>
+                            <li>*Asistentes de IA:* Agentes de apoyo que guíen y faciliten el uso de nuevas herramientas. 🤖</li>
+                            <li>*Capacitación Continua:* Programas de formación para empoderar a todo el personal. 📚</li>
+                        </ul>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 92%;"></div>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-100">Eficiencia Operativa IA (Finanzas) 💰</h3>
-                    </div>
-                    <span class="text-2xl text-gray-400 arrow-icon" id="arrow-card6">▼</span>
-                </div>
-                <p class="text-sm text-gray-300">
-                    "IA para liberar el potencial humano. 💡"
-                </p>
-                <div id="card6-content" class="card-detailed-content">
-                    <p class="text-sm text-gray-300 mt-4 mb-2">
-                        Aplicaré la IA para automatizar y optimizar procesos en áreas críticas de UCEM como Recursos Humanos, Finanzas e Infraestructura. Esto permitirá:
-                    </p>
-                    <ul class="list-disc list-inside text-xs space-y-1 mb-3 text-gray-300">
-                        <li>Análisis predictivo de necesidades de personal y recursos. 📈</li>
-                        <li>Automatización de flujos de trabajo repetitivos. ⚙️</li>
-                        <li>Detección temprana de anomalías y optimización de presupuestos. 🛡️</li>
-                    </ul>
-                    <div class="pie-chart" style="background: conic-gradient(#68d391 0% 70%, #4299e1 70% 100%);"></div>
-                    <div class="flex justify-between text-xs text-gray-400 mt-2">
-                        <span>Reducción de Costos Operativos:</span>
-                        <span class="font-bold text-green-500">30% 📉</span>
-                    </div>
-                    <div class="flex justify-between text-xs text-gray-400">
-                        <span>Agilización de Procesos:</span>
-                        <span class="font-bold text-blue-400">40% ⚡</span>
-                    </div>
-                    <p class="text-xs text-gray-500 mt-2">
-                        Basado en reportes de empresas que implementan IA en finanzas y operaciones. 📊
-                    </p>
-                </div>
-            </div>
-
-            <!-- Tarjeta 7: Marketing Potenciado por IA para UCEM -->
-            <div class="card" onclick="toggleCard('card7')">
-                <div class="card-header">
-                    <div class="flex items-center">
-                        <div class="card-icon bg-green-600 text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-                            </svg>
+                        <div class="flex justify-between text-xs text-gray-400 mt-2">
+                            <span>Nivel de Adopción Esperado:</span>
+                            <span class="font-bold text-green-500">92% 👍</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-100">Marketing IA en UCEM 📈</h3>
-                    </div>
-                    <span class="text-2xl text-gray-400 arrow-icon" id="arrow-card7">▼</span>
-                </div>
-                <p class="text-sm text-gray-300">
-                    "Campañas inteligentes, resultados superiores. 🎯"
-                </p>
-                <div id="card7-content" class="card-detailed-content">
-                    <p class="text-sm text-gray-300 mt-4 mb-2">
-                        Mi experiencia en marketing, combinada con IA, transformará la captación y retención de estudiantes en UCEM mediante:
-                    </p>
-                    <ul class="list-disc list-inside text-xs space-y-1 mb-3 text-gray-300">
-                        <li>*Personalización:* Experiencia educativa adaptada a cada estudiante. 🧑‍🎓</li>
-                        <li>*Optimización de Campañas:* Análisis predictivo para máxima efectividad en publicidad digital. 📊</li>
-                        <li>*Análisis de Tendencias:* Identificación de oportunidades de mercado y comportamiento del consumidor. 🔍</li>
-                    </ul>
-                    <div class="bar-chart-container">
-                        <div class="bar-chart-bar" style="height: 40px; background-color: #68d391;"></div>
-                        <div class="bar-chart-bar" style="height: 55px; background-color: #4299e1;"></div>
-                        <div class="bar-chart-bar" style="height: 30px; background-color: #fc8181;"></div>
-                        <div class="bar-chart-bar" style="height: 45px; background-color: #ecc94b;"></div>
-                    </div>
-                    <div class="flex justify-between text-xs text-gray-400 mt-2">
-                        <span>Crecimiento de Leads IA:</span>
-                        <span class="font-bold text-green-500">+35% 🚀</span>
-                    </div>
-                    <div class="flex justify-between text-xs text-gray-400">
-                        <span>ROI de Campañas:</span>
-                        <span class="font-bold text-blue-400">+25% 💰</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tarjeta 8: Frase de Google I/O -->
-            <div class="card bg-gradient-to-br from-red-700 to-orange-600 text-white">
-                <div class="card-header">
-                    <div class="card-icon bg-white text-red-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold">Innovación IA 💡</h3>
-                </div>
-                <p class="text-base italic">
-                    "La IA es para todos. Es una herramienta poderosa para hacer la vida más útil y accesible. 🌐"
-                </p>
-                <p class="text-xs text-right font-light">- Google I/O (Adaptado)</p>
-            </div>
-
-            <!-- Tarjeta 9: Adopción de IA y Experiencia de Usuario para UCEM -->
-            <div class="card" onclick="toggleCard('card9')">
-                <div class="card-header">
-                    <div class="flex items-center">
-                        <div class="card-icon bg-yellow-600 text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                            </svg>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>Satisfacción del Usuario:</span>
+                            <span class="font-bold text-green-500">4.8/5 ⭐</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-100">Adopción IA y UX ✨</h3>
                     </div>
-                    <span class="text-2xl text-gray-400 arrow-icon" id="arrow-card9">▼</span>
                 </div>
-                <p class="text-sm text-gray-300">
-                    "Facilitando la transición a un futuro inteligente. 🚀"
-                </p>
-                <div id="card9-content" class="card-detailed-content">
-                    <p class="text-sm text-gray-300 mt-4 mb-2">
-                        Superaremos las barreras de adopción de nuevas tecnologías en UCEM mediante:
+
+            </div>
+
+            <!-- Sección para Video Presentación (Desplegable) -->
+            <div class="section-toggle-container">
+                <div class="section-title-toggle" onclick="toggleSection('video-presentation')">
+                    <span>Video Presentación (Mi Avatar IA) 🎬</span>
+                    <!-- CORRECCIÓN: Añadida la clase 'arrow-icon' para consistencia -->
+                    <span class="text-2xl arrow-icon" id="arrow-video-presentation">▼</span>
+                </div>
+                <div id="content-video-presentation" class="section-content-toggle">
+                    <div class="video-container mt-4">
+                        <iframe src="https://www.youtube.com/embed/oBe9COg0gO0?si=6xH9trhwqFR3CZ57" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                        </iframe>
+                    </div>
+                    <p class="text-center text-sm text-gray-400 mt-4">
+                        Este video es una demostración de la capacidad de Xens AI para crear avatares a partir de imagen y voz, y cómo podemos aplicarlo para una comunicación innovadora. 🗣️
                     </p>
-                    <ul class="list-disc list-inside text-xs space-y-1 mb-3 text-gray-300">
-                        <li>*Interfaces Intuitivas:* Diseño centrado en el usuario para una fácil interacción. 🖥️</li>
-                        <li>*Asistentes de IA:* Agentes de apoyo que guíen y faciliten el uso de nuevas herramientas. 🤖</li>
-                        <li>*Capacitación Continua:* Programas de formación para empoderar a todo el personal. 📚</li>
-                    </ul>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width: 92%;"></div>
-                    </div>
-                    <div class="flex justify-between text-xs text-gray-400 mt-2">
-                        <span>Nivel de Adopción Esperado:</span>
-                        <span class="font-bold text-green-500">92% 👍</span>
-                    </div>
-                    <div class="flex justify-between text-xs text-gray-400">
-                        <span>Satisfacción del Usuario:</span>
-                        <span class="font-bold text-green-500">4.8/5 ⭐</span>
-                    </div>
+                </div>
+            </div>
+
+            <!-- Sección para Información de Contacto (Desplegable) -->
+            <div class="section-toggle-container">
+                <div class="section-title-toggle" onclick="toggleSection('contact-info')">
+                    <span>Conectemos 📧</span>
+                    <!-- CORRECCIÓN: Añadida la clase 'arrow-icon' para consistencia -->
+                    <span class="text-2xl arrow-icon" id="arrow-contact-info">▼</span>
+                </div>
+                <div id="content-contact-info" class="section-content-toggle">
+                    <p class="text-base text-gray-300 mb-2 mt-4">
+                        Estoy entusiasmado por discutir cómo mis capacidades en IA, Gestión Empresarial y Marketing pueden impulsar la transformación digital en Sistema UCEM. ¡Hablemos! 📞
+                    </p>
+                    <p class="text-lg font-medium text-gray-100">Email: ai.xens.wifi@gmail.com</p>
+                    <p class="text-lg font-medium text-gray-100">Teléfono: 477 826 8128</p>
                 </div>
             </div>
 
         </div>
-
-        <!-- Sección para Video Presentación (Desplegable) -->
-        <div class="section-toggle-container">
-            <div class="section-title-toggle" onclick="toggleSection('video-presentation')">
-                <span>Video Presentación (Mi Avatar IA) 🎬</span>
-                <span class="text-2xl transform transition-transform duration-300" id="arrow-video-presentation">▼</span>
-            </div>
-            <div id="content-video-presentation" class="section-content-toggle">
-                <div class="video-container mt-4">
-                    <!-- YouTube Embed para el video de tu avatar -->
-                    <iframe
-                        src="https://www.youtube.com/embed/oBe9COg0gO0?si=6xH9trhwqFR3CZ57"
-                        title="YouTube video player"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-                <p class="text-center text-sm text-gray-400 mt-4">
-                    Este video es una demostración de la capacidad de Xens AI para crear avatares a partir de imagen y voz, y cómo podemos aplicarlo para una comunicación innovadora. 🗣️
-                </p>
-            </div>
-        </div>
-
-        <!-- Sección para Información de Contacto (Desplegable) -->
-        <div class="section-toggle-container">
-            <div class="section-title-toggle" onclick="toggleSection('contact-info')">
-                <span>Conectemos 📧</span>
-                <span class="text-2xl transform transition-transform duration-300" id="arrow-contact-info">▼</span>
-            </div>
-            <div id="content-contact-info" class="section-content-toggle">
-                <p class="text-base text-gray-300 mb-2">
-                    Estoy entusiasmado por discutir cómo mis capacidades en IA, Gestión Empresarial y Marketing pueden impulsar la transformación digital en Sistema UCEM. ¡Hablemos! 📞
-                </p>
-                <p class="text-lg font-medium text-gray-100">Email: ai.xens.wifi@gmail.com</p>
-                <p class="text-lg font-medium text-gray-100">Teléfono: 477 826 8128</p>
-            </div>
-        </div>
-
     </div>
 
     <script>
-        // Función para alternar la visibilidad de las secciones principales
+        // --- CÓDIGO CORREGIDO ---
+
+        // Función para alternar la visibilidad de las secciones principales (Video y Contacto)
         function toggleSection(id) {
-            const content = document.getElementById(content-${id});
-            const arrow = document.getElementById(arrow-${id});
+            // CORRECCIÓN: Se usan template literals (backticks ``) para construir el ID correctamente.
+            const content = document.getElementById(`content-${id}`);
+            const arrow = document.getElementById(`arrow-${id}`);
 
-            if (content.classList.contains('active')) {
-                content.classList.remove('active');
-                arrow.classList.remove('rotate-180');
-            } else {
-                // Opcional: Cerrar otras secciones si solo una debe estar abierta a la vez
-                // document.querySelectorAll('.section-content-toggle.active').forEach(item => {
-                //     item.classList.remove('active');
-                //     const otherArrowId = arrow-${item.id};
-                //     document.getElementById(otherArrowId).classList.remove('rotate-180');
-                // });
-
-                content.classList.add('active');
-                arrow.classList.add('rotate-180');
+            if (content && arrow) { // Verificar que los elementos existen
+                if (content.classList.contains('active')) {
+                    content.classList.remove('active');
+                    arrow.classList.remove('rotate'); // CORRECCIÓN: Usar la clase '.rotate' para consistencia
+                } else {
+                    content.classList.add('active');
+                    arrow.classList.add('rotate'); // CORRECCIÓN: Usar la clase '.rotate' para consistencia
+                }
             }
         }
 
         // Función para alternar la visibilidad del contenido detallado de las tarjetas
         function toggleCard(id) {
-            const content = document.getElementById(${id}-content);
-            const arrow = document.getElementById(arrow-${id});
+            // CORRECCIÓN: Se usan template literals (backticks ``) para construir el ID correctamente.
+            const content = document.getElementById(`${id}-content`);
+            const arrow = document.getElementById(`arrow-${id}`);
 
-            if (content.classList.contains('active')) {
-                content.classList.remove('active');
-                arrow.classList.remove('rotate');
-            } else {
-                // Opcional: Cerrar otras tarjetas si solo una debe estar abierta a la vez
-                // document.querySelectorAll('.card-detailed-content.active').forEach(item => {
-                //     item.classList.remove('active');
-                //     const otherArrowId = arrow-${item.closest('.card').id};
-                //     document.getElementById(otherArrowId).classList.remove('rotate');
-                // });
-
-                content.classList.add('active');
-                arrow.classList.add('rotate');
+             if (content && arrow) { // Verificar que los elementos existen
+                if (content.classList.contains('active')) {
+                    content.classList.remove('active');
+                    arrow.classList.remove('rotate');
+                } else {
+                    content.classList.add('active');
+                    arrow.classList.add('rotate');
+                }
             }
         }
-
-        // Inicializar: abrir algunas secciones por defecto si se desea
-        document.addEventListener('DOMContentLoaded', () => {
-            // toggleSection('video-presentation'); // Ejemplo: abrir la sección de video por defecto
-            // toggleSection('contact-info'); // Ejemplo: abrir la sección de contacto por defecto
-            // toggleCard('card1'); // Ejemplo: abrir la primera tarjeta por defecto
-        });
     </script>
 </body>
 </html>
